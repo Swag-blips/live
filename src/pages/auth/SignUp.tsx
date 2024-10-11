@@ -3,8 +3,13 @@ import React from "react";
 
 const SignUp = () => {
   return (
-    <div className="flex items-center justify-center">
-      <SignUpComponent />
+    <div className="flex items-center justify-center h-screen">
+      <SignUpComponent
+        routing="path"
+        path="/signup"
+        signInUrl="/signin"
+        forceRedirectUrl={"/"}
+      />
     </div>
   );
 };

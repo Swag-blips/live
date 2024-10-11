@@ -1,7 +1,8 @@
 import React from "react";
+import Wrapper from "../../components/Wrapper";
 
 const Home = () => {
-  return <div></div>;
+  return <Wrapper>Homepage</Wrapper>;
 };
 
 export default Home;
