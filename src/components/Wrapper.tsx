@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
+import Navbar from "./Navbar";
 
 interface Wrapper {
   children: React.ReactNode;
@@ -13,13 +14,15 @@ const Wrapper = ({ children, enableRightbar }: Wrapper) => {
         open={openSidebar}
         onClose={() => setOpenSidebar(!openSidebar)}
       />
-      <button
-        className="bg-primary p-4"
-        onClick={() => setOpenSidebar(!openSidebar)}
+
+      <main
+        className={`pl-0 md:pl-[300px] ${
+          enableRightbar ? "min-[1150px]:pr-[300px]" : ""
+        }`}
       >
-        Toggle sidebar
-      </button>
-      {children}
+        <Navbar onMenuClick={() => setOpenSidebar(!openSidebar)} />
+        <div className="">{children}</div>
+      </main>
     </div>
   );
 };
