@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Logo from "./Logo";
 import { Menu, Search } from "lucide-react";
-import { SignedOut, UserButton } from "@clerk/clerk-react";
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
 
 interface Navbar {
@@ -26,7 +26,10 @@ const Navbar = ({ onMenuClick }: Navbar) => {
         />
       </div>
       <div className="flex justify-end items-center gap-3">
-        <UserButton />
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+
         <SignedOut>
           <div className="flex items-center gap-3">
             <Link

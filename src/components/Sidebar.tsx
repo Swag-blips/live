@@ -26,7 +26,7 @@ const Sidebar = ({ open, onClose }: Sidebar) => {
       <div className="p-8">
         {routes.map((route, index) => (
           <Link
-            to="route.path"
+            to={route.path}
             target={route.target}
             key={index}
             className={`flex items-center gap-1 cursor-pointer px-5 py-3 rounded-[51px] rounded-tr-none rounded-br-none text-base  transition-all hover:text-white ${
