@@ -22,7 +22,7 @@ const Wrapper = ({ children, enableRightbar }: Wrapper) => {
         }`}
       >
         <Navbar onMenuClick={() => setOpenSidebar(!openSidebar)} />
-        <div className="">{children}</div>
+        <div className="px-4">{children}</div>
         {enableRightbar && <RightBar />}
       </main>
     </div>

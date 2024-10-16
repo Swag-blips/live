@@ -3,7 +3,7 @@ import Wrapper from "../../components/Wrapper";
 
 const Schedule = () => {
   return (
-    <Wrapper>
+    <Wrapper >
       <div>Schedule</div>
     </Wrapper>
   );
