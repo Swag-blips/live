@@ -35,3 +35,4 @@ export const routes: Route[] = [
     activePaths: ["/dashboard/golive"],
   },
 ];
+
