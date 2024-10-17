@@ -23,12 +23,18 @@ const ScheduleForm = ({
   onComplete,
   preloadedData,
 }: ScheduleForm) => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const [data, setData] = useState<Data>({
     title: "",
     date: new Date(),
     time: new Date(),
     description: "",
   });
+
+  const createSchedule = async () => {};
+
+  console.log(data);
   return (
     <div className="fixed top-0 left-0 z-[300] w-full h-full p-4 bg-dark-overlay flex justify-center overflow-y-auto">
       <div className="bg-bgSecondary py-8 px-4 rounded-2xl h-fit w-full max-w-[400px]">
@@ -77,7 +83,12 @@ const ScheduleForm = ({
             }
             className="block my-5 w-full h-[100px] py-2 text-sm bg-bgprimary px-2 rounded-md outline-none border border-gray-700 focus:border-primary"
           ></textarea>
-          <button>{mode === "create" ? "Create Now" : "Edit Now"}</button>
+          <button
+            onClick={createSchedule}
+            className="block w-full bg-gradient-to-r from-primary to-blue-600 py-2 px-4 rounded-lg"
+          >
+            {mode === "create" ? "Create Now" : "Edit Now"}
+          </button>
         </div>
       </div>
     </div>
