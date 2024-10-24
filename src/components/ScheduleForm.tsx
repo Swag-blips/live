@@ -1,14 +1,19 @@
+import { useUser } from "@clerk/clerk-react";
+import generateUniqueId from "generate-unique-id";
 import { X } from "lucide-react";
+import moment from "moment";
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 import "react-datepicker/dist/react-datepicker.css";
 
 interface ScheduleForm {
   mode: "create" | "update";
-  onClose?: () => void;
+  onClose: () => void;
   preloadedData?: any;
-  onComplete?: () => void;
+  onComplete: () => void;
 }
 
 interface Data {
@@ -32,7 +37,37 @@ const ScheduleForm = ({
     description: "",
   });
 
-  const createSchedule = async () => {};
+  const { user } = useUser();
+
+  const createSchedule = async () => {
+    setError("");
+
+    if (!data.time) setError("Date is required");
+    if (!data.time) setError("Time is required");
+
+    let upload = {
+      ...data,
+      date: moment(data.date).format("MM-DD-YYYY"),
+      time: moment(data.time).format("hh:mm a"),
+      email: user?.primaryEmailAddress?.emailAddress,
+      scheduleId: generateUniqueId({ length: 6 }),
+    };
+
+    try {
+      setLoading(true);
+      if (mode === "create") {
+        await addDoc(collection(db, "schedules"), upload);
+        onComplete();
+        return onClose();
+      }
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+
+    console.log("Upload", upload);
+  };
 
   console.log(data);
   return (
@@ -87,12 +122,15 @@ const ScheduleForm = ({
             onClick={createSchedule}
             className="block w-full bg-gradient-to-r from-primary to-blue-600 py-2 px-4 rounded-lg"
           >
-            {mode === "create" ? "Create Now" : "Edit Now"}
+            {loading
+              ? "Please wait..."
+              : mode === "create"
+              ? "Create Now"
+              : "Edit Now"}
           </button>
         </div>
       </div>
     </div>
   );
 };
-
 export default ScheduleForm;
