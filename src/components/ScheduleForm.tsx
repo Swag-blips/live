@@ -2,9 +2,9 @@ import { useUser } from "@clerk/clerk-react";
 import generateUniqueId from "generate-unique-id";
 import { X } from "lucide-react";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -18,6 +18,7 @@ interface ScheduleForm {
 
 interface Data {
   title: string;
+  scheduleId: string | undefined;
   date: Date | null;
   time: Date | null;
   description: string;
@@ -30,14 +31,39 @@ const ScheduleForm = ({
 }: ScheduleForm) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [data, setData] = useState<Data>({
+  const [data, setData] = useState<any>({
     title: "",
     date: new Date(),
     time: new Date(),
     description: "",
   });
 
+  useEffect(() => {
+    if (preloadedData)
+      setData({
+        ...preloadedData,
+        date: timeStringToDate(
+          preloadedData.time,
+          new Date(preloadedData.date)
+        ),
+        time: timeStringToDate(preloadedData.time),
+      });
+  }, [preloadedData]);
   const { user } = useUser();
+
+  const timeStringToDate = (timeString: any, date = new Date()) => {
+    const [time, modifier] = timeString.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (modifier === "PM" && hours < 12) {
+      hours += 12;
+    }
+    if (modifier === "AM" && hours === 12) {
+      hours = 0;
+    }
+
+    return new Date(date.setHours(hours, minutes, 0, 0));
+  };
 
   const createSchedule = async () => {
     setError("");
@@ -60,6 +86,12 @@ const ScheduleForm = ({
         onComplete();
         return onClose();
       }
+      if (mode === "update") {
+        delete upload.scheduleId;
+        await updateDoc(doc(db, "schedules", preloadedData.id), upload);
+        onComplete();
+        return onClose();
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -69,7 +101,6 @@ const ScheduleForm = ({
     console.log("Upload", upload);
   };
 
-  console.log(data);
   return (
     <div className="fixed top-0 left-0 z-[300] w-full h-full p-4 bg-dark-overlay flex justify-center overflow-y-auto">
       <div className="bg-bgSecondary py-8 px-4 rounded-2xl h-fit w-full max-w-[400px]">
@@ -82,6 +113,12 @@ const ScheduleForm = ({
             <X />
           </div>
         </div>
+
+        {error && (
+          <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <p className="text-sm">{error}</p>
+          </div>
+        )}
 
         <div>
           <input
@@ -133,4 +170,5 @@ const ScheduleForm = ({
     </div>
   );
 };
+
 export default ScheduleForm;

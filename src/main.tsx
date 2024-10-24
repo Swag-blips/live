@@ -4,6 +4,8 @@ import App from "./App.tsx";
 import { ClerkProvider } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
 import "./index.css";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -21,6 +23,7 @@ createRoot(document.getElementById("root")!).render(
       signUpUrl="/signup"
     >
       <App />
+      <ToastContainer />
     </ClerkProvider>
   </StrictMode>
 );
